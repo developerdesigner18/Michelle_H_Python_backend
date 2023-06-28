@@ -12,7 +12,19 @@ class  UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Users
-        fields = ['first_name', 'last_name', 'email', 'phone_no', 'Date_of_birth', 'state', 'city', 'area', 'username', 'password', 'user_role']
+        fields = ['first_name', 'last_name', 'email', 'phone_no', 'Date_of_birth', 'state', 'city', 'username', 'password', 'user_role']
+
+class  UserRegistrByPMSerializer(serializers.ModelSerializer):
+
+    first_name = serializers.CharField(max_length=20, required=True)
+    last_name = serializers.CharField(max_length=20, required=True)
+    Date_of_birth = serializers.DateField(required=True)
+    user_role = serializers.CharField(max_length=1, required=True)
+    
+    class Meta:
+
+        model = Users
+        fields = ['first_name', 'last_name', 'email', 'phone_no', 'Date_of_birth', 'state', 'city', 'username', 'user_role']
 
 class UsersLoginSerializer(serializers.ModelSerializer):
 
@@ -94,4 +106,4 @@ class UserAllDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['date_joined' , 'first_name', 'last_name','username', 'email', 'phone_no', 'Date_of_birth', 'state', 'city', 'area', 'image', 'is_email_verified', 'is_phno_verified', 'user_account_status', 'user_status']
+        fields = ['date_joined' , 'first_name', 'last_name','username', 'email', 'phone_no', 'Date_of_birth', 'state', 'city', 'image', 'is_email_verified', 'is_phno_verified', 'user_account_status', 'user_status']

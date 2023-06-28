@@ -19,6 +19,7 @@ from core.otp import  send_email_otp, email_otp_verify
 from rest_framework import mixins
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
+from core.password_generator import get_random_strong_password
 
 # Create your views here.
 
@@ -169,12 +170,17 @@ class UserCreationByPMView(APIView):
 
             if user_verification == True:
 
-                serializer = serializers.UserRegistrationSerializer(data = request.data)
+                print(request.data)
+
+                if "password" in  request.data:
+                    return Response({'error':'Do not password for crearting user, we will generate random password and send user via email'})
+                
+                serializer = serializers.UserRegistrByPMSerializer(data = request.data)
 
                 if serializer.is_valid(raise_exception=True):
 
-                    if not ComplexPasswordValidatorFunc(request.data['password']):
-                        return Response({"error":"Password must contain 8 character which includes at least 1 number, 1 uppercase, and 1 non-alphanumeric character"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+                    # if not ComplexPasswordValidatorFunc(request.data['password']):
+                    #     return Response({"error":"Password must contain 8 character which includes at least 1 number, 1 uppercase, and 1 non-alphanumeric character"}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
                     user_roles = [ 'C', 'F', 'S' ]
 
@@ -207,32 +213,36 @@ class UserCreationByPMView(APIView):
 
                             return Response({"error": check_work_email}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-                    user = serializer.save(password=make_password(request.data['password']))
+                    u_username = request.data['username']
+                    u_password = get_random_strong_password()
+
+                    user = serializer.save(password=make_password(u_password))
                     user.user_created_by = requested_user
                     user.save()
 
                     token = default_token_generator.make_token(user)
                     user.verification_token_email = token
                     user.save()
+
                     verification_url = f'http://127.0.0.1:8000/users/verify-email/{token}/'
 
                     if request.data['user_role'] == 'C':
 
                         subject = "Subject"
                         text_body = "This is the body"
-                        html_body = f"<h1> Hello {request.data['first_name']} {request.data['last_name']} you have just registred successfully with {request.data['email']} email as a Client</h1><br><br> <p>{verification_url}</p>"
+                        html_body = f"<h1> Hello {request.data['first_name']} {request.data['last_name']} you have just registred successfully with {request.data['email']} email as a Client</h1><br><br> <p>{verification_url}</p><br><br><p>Username : {u_username}</p><br><br><p>Password : {u_password}</p>"
 
                     elif request.data['user_role'] == 'F':
 
                         subject = "Subject"
                         text_body = "This is the body"
-                        html_body = f"<h1> Hello {request.data['first_name']} {request.data['last_name']} you have just registred successfully with {request.data['email']} email as a Financial Analyst</h1><br><br> <p>{verification_url}</p>"
+                        html_body = f"<h1> Hello {request.data['first_name']} {request.data['last_name']} you have just registred successfully with {request.data['email']} email as a Financial Analyst</h1><br><br> <p>{verification_url}</p><br><br><p>Username : {u_username}</p><br><br><p>Password : {u_password}</p>"
 
                     elif request.data['user_role'] == 'S':
 
                         subject = "Subject"
                         text_body = "This is the body"
-                        html_body = f"<h1> Hello {request.data['first_name']} {request.data['last_name']} you have just registred successfully with {request.data['email']} email as a Stategist</h1><br><br> <p>{verification_url}</p>"
+                        html_body = f"<h1> Hello {request.data['first_name']} {request.data['last_name']} you have just registred successfully with {request.data['email']} email as a Stategist</h1><br><br> <p>{verification_url}</p><br><br><p>Username : {u_username}</p><br><br><p>Password : {u_password}</p>"
                         
                     else:
 
