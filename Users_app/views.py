@@ -476,18 +476,22 @@ class UsersDetailsUpdateView(generics.GenericAPIView,mixins.UpdateModelMixin):
         id = request.user.id
         users_obj = Users.objects.get( id = id )
 
-        if "aadhar_no" in request.data:
-
-            if users_obj.is_aadhar_verified == True:
-
-                return Response({"error":"Can't change the Aadhar_no after aadhar verification"}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
         if "email" in request.data:
+
+            email_exists = Users.objects.filter(email=request.data["email"]).exists()
+
+            if email_exists:
+                return Response({"error":"User with this Email already exists"},status=status.HTTP_406_NOT_ACCEPTABLE)
 
             users_obj.is_email_verified = False
             users_obj.save()
         
         if "phone_no" in request.data:
+
+            phone_np_exists = Users.objects.filter(phone_no=request.data["phone_no"]).exists()
+
+            if phone_np_exists:
+                return Response({"error":"User with this Phone_no already exists"},status=status.HTTP_406_NOT_ACCEPTABLE)
 
             users_obj.is_phno_verified = False
             users_obj.save()
