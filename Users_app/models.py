@@ -40,7 +40,7 @@ class Users(AbstractUser):
     Date_of_birth = models.DateField(null=True, blank=True)
     state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="", blank=True, null=True, default="", verbose_name="Image URL")
+    image = models.ImageField(upload_to="Images/Users_Profile_Images", blank=True, null=True, default="Images/Users_Profile_Images/User_Default_Profile_Picture.png")
     
     is_email_verified = models.BooleanField(default=False, verbose_name="Email Verified")
     is_phno_verified = models.BooleanField(default=False, verbose_name="Phone No Verified")
