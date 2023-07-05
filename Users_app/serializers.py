@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from .models import Users
+import sys
+from django.core import exceptions
+import django.contrib.auth.password_validation as validators
 
 
 class  UserRegistrationSerializer(serializers.ModelSerializer):
@@ -13,6 +16,24 @@ class  UserRegistrationSerializer(serializers.ModelSerializer):
 
         model = Users
         fields = ['first_name', 'last_name', 'email', 'phone_no', 'Date_of_birth', 'state', 'city', 'username', 'password', 'user_role']
+
+    def validate(self, data):
+         
+         user = Users(**data)
+         password = data.get('password')
+         
+         errors = dict() 
+         
+         try:
+             validators.validate_password(password=password, user=user)
+         
+         except exceptions.ValidationError as e:
+             errors['password'] = list(e.messages)
+         
+         if errors:
+             raise serializers.ValidationError(errors)
+          
+         return super(UserRegistrationSerializer, self).validate(data)
 
 class  UserRegistrByPMSerializer(serializers.ModelSerializer):
 
