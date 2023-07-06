@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-3i-$_z-bf=$llf&%yj70&7s@oqx-cs0sku_^gdmnce^gu@6-+v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'localhost', '127.0.0.1' ]
+ALLOWED_HOSTS = [ 'localhost', '127.0.0.1', '132.148.237.144', 'vegaveta.com' ]
 
 
 # Application definition
@@ -224,6 +224,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
+    '132.148.237.144',
+    'vegaveta.com',
 ]
 
 CORS_ALLOW_METHODS = [
@@ -237,6 +239,8 @@ CORS_ALLOW_METHODS = [
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
     "http://localhost:8000",
+    '132.148.237.144',
+    'vegaveta.com',
 ]
 
 MEDIA_ROOT = os.path.join( BASE_DIR , 'static/media' )
