@@ -3,3 +3,4 @@ env
 core/__pycache__
 Users_app/__pycache__
 Users_app/migrations
+.env
